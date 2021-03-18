@@ -6,6 +6,6 @@ app = Flask("microblog")
 #aqui vai comentário
 @app.route("/")
 def index():
-    return "Olá Mundo"
+    return "Hello World"
 
 app.run()
