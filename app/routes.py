@@ -1,21 +1,21 @@
 from app import app, db
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User
+from app.models import User, Post
 from werkzeug.urls import url_parse
 
 @app.route('/post', methods=["POST"])
 def post():
+    post = Post(author=current_user, body=request.values.get('post'))
+    db.session.add(post)
+    db.session.commit()
     return redirect(url_for('index'))
 
 @app.route('/')
 @app.route('/index')
 @login_required
 def index():
-    posts = [
-        {'author': {'username': 'Maria'}, 'body': "Olá da Maria"},
-        {'author': {'username': 'Mario'}, 'body': "Olá!"}
-    ]
+    posts = Post.query.all()
     return render_template("index.html", user=current_user, posts=posts)
 
 @app.route('/login', methods=["GET", "POST"])
